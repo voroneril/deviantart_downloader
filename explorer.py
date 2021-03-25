@@ -321,6 +321,7 @@ class DAExplorer():
             raise DAExplorerException("Argument 'deviation' must be type Deviation.")
         try:
             url_targ = ""
+            deviation_raw = {}
             if deviation.is_downloadable:
                 deviation_raw = self._download_deviation(deviation.deviationid)
                 url_targ = deviation_raw["src"]
@@ -338,8 +339,13 @@ class DAExplorer():
                         if not extension:
                             # Do it the hackish way if mimetypes can't figure it out
                             extension = "." + url_targ.split("/")[-1].split(".")[1].split("?")[0]
+                        filename = ''
+                        if deviation.is_downloadable:
+                            filename = deviation_raw['filename']
+                        else :
+                            filename = url_targ.split("/")[-1].split("?")[0]
                         f = await aiofiles.open(
-                            Path(full_path).joinpath(str(deviation.deviationid) + extension),
+                            Path(full_path).joinpath(filename),
                             mode='wb'
                         )
                         await f.write(await resp.read())
