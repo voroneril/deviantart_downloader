@@ -176,6 +176,7 @@ class DAExplorer():
         :param page_idx: int Index of the page to fetch, pagelen MAX_ITEMS_PER_REQUEST.
         :return dict Response from the API.
         """
+
         return self._api("/collections/folders", get_data={
             "username": self.user,
             "offset": page_idx * DAExplorer.MAX_ITEMS_PER_REQUEST,
@@ -251,7 +252,6 @@ class DAExplorer():
             response = self._get_gallery_folders(page_idx)
         elif source is Source.COLLECTION:
             response = self._get_collection_folders(page_idx)
-
         # End condition: no more Folders to find
         if response == None or (not response["has_more"] and len(response["results"]) == 0):
             return None
@@ -262,7 +262,7 @@ class DAExplorer():
             folder.folderid = folder_info["folderid"]
             folder.name = folder_info["name"]
 
-        return output
+        return { "output": output, "has_more": response["has_more"] }
 
     def list_deviations(self, source, folder, page_idx):
         """

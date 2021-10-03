@@ -167,9 +167,13 @@ class DAFrontend():
             # Detect end of Folder list
             if temp == None:
                 break
-
             # Append and continue through list
-            folders += temp
+            
+            folders += temp['output']
+
+            if temp['has_more'] == False:
+                break
+                
             idx += 1
         return folders
 
